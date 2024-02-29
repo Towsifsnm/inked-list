@@ -1,73 +1,100 @@
-#include<stdio.h>
-#include<stdlib.h>
-struct Node{
+/*Task 3:
+Learn to reverse the linked list in-place. Implement a function that changes the order of nodes
+in the list.
+
+Sample Input:
+- Reverse the linked list:5->25->20
+
+Sample Output:
+Linked List: 20 -> 25 -> 5
+*/
+
+#include <bits/stdc++.h>
+using namespace std;
+struct Node
+{
     int data;
-    struct Node *link;
+    Node* next;
 };
-struct Node *head=NULL;
 
-void firstNode(int data)
+Node* createNode(int value)
 {
-    head=(struct Node*)malloc(sizeof(struct Node));
-    head->data=data;
-    head->link=NULL;
-}
-void addNode(int data)
-{
-    struct Node*temp;
-    struct Node *ptr;
-    ptr=head;
-    temp=(struct Node*)malloc(sizeof(struct Node));
-    temp->data=data;
-    temp->link=NULL;
-    while(ptr->link!=NULL)
+    Node* newNode = new Node;
+    if (newNode != nullptr)
     {
-        ptr=ptr->link;
+        newNode->data = value;
+        newNode->next = nullptr;
     }
-    ptr->link=temp;
+    return newNode;
 }
-
-void reverse()
+Node* addBeginning(Node* head, int value)
 {
-    struct Node *prev=NULL;
-    struct Node *ptr=head;
-    struct Node *next=NULL;
-    while(ptr!=NULL)
+    Node* newNode = createNode(value);
+    if (newNode != nullptr)
     {
-        next=ptr->link;
-        ptr->link=prev;
-        prev=ptr;
-        ptr=next;
+        newNode->next = head;
+        head = newNode;
     }
-    head=prev;
-
+    return head;
 }
 
-void printNode()
+Node* reverseList(Node* head)
 {
-    struct Node *ptr;
-    ptr=head;
-    while(ptr!=NULL)
+    Node* prev = nullptr;
+    Node* current = head;
+    Node* nextNode = nullptr;
+
+    while (current != nullptr)
     {
-        printf("%d->",ptr->data);
-        ptr=ptr->link;
+        nextNode = current->next;
+        current->next = prev;
+        prev = current;
+        current = nextNode;
     }
 
+    head = prev;
+    return head;
+}
+
+void printList(Node* head)
+{
+    while (head != nullptr)
+    {
+        cout << head->data;
+        if (head->next != nullptr)
+        {
+            cout << " -> ";
+        }
+        head = head->next;
+    }
+    cout << endl;
+}
+
+void deleteList(Node* head)
+{
+    Node* current = head;
+    while (current != nullptr)
+    {
+        Node* nextNode = current->next;
+        delete current;
+        current = nextNode;
+    }
 }
 
 int main()
 {
-    printf("Linked List: ");
-    firstNode(5);
-    addNode(25);
-    addNode(20);
-    printNode();
-    printf("\n\n");
-    printf("Reverse the linked list: ");
-    reverse();
-    printNode();
-    printf("\n\n");
+    Node* head = nullptr;
+    head = addBeginning(head, 20);
+    head = addBeginning(head, 25);
+    head = addBeginning(head, 5);
+    cout << "Original Linked List: ";
+    printList(head);
+    head = reverseList(head);
+
+    cout << "Reversed Linked List: ";
+    printList(head);
+
+    deleteList(head);
 
     return 0;
-
 }
